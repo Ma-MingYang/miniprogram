@@ -8,11 +8,40 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    addresss:''
+    address: '',
+    scale: 10,
+    subkey:'XEUBZ-BVQWO-CZGWK-S2HS7-XZFHZ-24BKW',
+    markers: [],
+    circles: []
   },
-  getaddress(e){
+  getaddress(e) {
     this.setData({
-      addresss:e.detail.value
+      address: e.detail.value
+    })
+    this.sendRequst()
+  },
+  markertap(e){
+    console.log(e)
+  },
+  sendRequst(){
+    var that=this;
+    app.Http.getReq('/ws/geocoder/v1/?address='+that.data.address+'&key='+that.data.subkey,function(res){
+      that.setData({
+        'markers[0].latitude':res.data.result.location.lat,
+        'markers[0].longitude': res.data.result.location.lng,
+        'circles[0].latitude': res.data.result.location.lat,
+        'circles[0].longitude': res.data.result.location.lng,
+      })
+    })
+  },
+  addscale() {
+    this.setData({
+      scale: this.data.scale < 18 ? ++this.data.scale : this.data.scale
+    })
+  },
+  minusscale() {
+    this.setData({
+      scale: this.data.scale > 5 ? --this.data.scale : this.data.scale
     })
   },
   //事件处理函数
@@ -21,33 +50,38 @@ Page({
       url: '../logs/logs'
     })
   },
-  onLoad: function () {
-    if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUse){
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
+  onLoad: function() {
+    var _this=this
+    wx.getLocation({
+      type: 'wgs84', // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
+      success: function (res) {
+
+        _this.setData({
+          latitude: res.latitude,
+          longitude: res.longitude,
+          markers: [{
+            id: "1",
+            latitude: res.latitude,
+            longitude: res.longitude,
+            width: 50,
+            height: 50,
+            iconPath: '../../images/icons/address.png',
+            title: "哪里"
+
+          }],
+          circles: [{
+            latitude: res.latitude,
+            longitude: res.longitude,
+            color: '#FF0000DD',
+            fillColor: '#7cb5ec88',
+            radius: 3000,
+            strokeWidth: 1
+          }]
+
         })
       }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    }
+
+    })
   },
   getUserInfo: function(e) {
     console.log(e)

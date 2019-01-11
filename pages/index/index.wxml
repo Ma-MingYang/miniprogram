@@ -6,11 +6,14 @@
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text> -->
 
-      <map id='map'></map>
+      <map id='map' scale='{{scale}}'  circles='{{circles}}' latitude='{{latitude}}' longitude='{{longitude}}' enable-zoom bindmarkertap='markertap' subkey='{{subkey}}' markers='{{markers}}'></map>
     <!-- </block> -->
   </view>
   <view class="usermotto">
     <!-- <text class="user-motto">{{motto}}</text> -->
-    <input bindinput='getaddress' placeholder='输入地址' value='{{addresss}}'></input>
+    <input bindblur='getaddress' placeholder='输入地址' value='{{address}}'></input>
+    {{scale}}
+    <button catchtap='minusscale'>-</button>
+    <button catchtap='addscale'>+</button>
   </view>
 </view>

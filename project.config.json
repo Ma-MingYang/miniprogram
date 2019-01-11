@@ -4,7 +4,7 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
@@ -14,7 +14,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "2.4.4",
 	"appid": "wx1ca0e5ce860f0371",
-	"projectname": "kuaipin",
+	"projectname": "mamingyang",
 	"debugOptions": {
 		"hidedInDevtools": []
 	},
